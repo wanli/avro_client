@@ -1,0 +1,7 @@
+CHANGELOG
+LICENSE
+Manifest
+README.rdoc
+Rakefile
+lib/avro_client.rb
+lib/avro_client/abstract_avro_client.rb

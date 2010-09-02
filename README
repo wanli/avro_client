@@ -1,0 +1,38 @@
+
+avro_client
+
+An Avro client wrapper that encapsulates some common failover behavior. This is based on Evan Weaver's Thrift-Client [http://github.com/fauna/thrift_client].
+
+== License
+
+Copyright 2010 Twitter, Inc. See included LICENSE file.
+
+== Features
+
+* Transparent connection management
+* Configurable failover and retry backoff
+
+== Usage
+
+Instantiate a client:
+
+  options = { :protocol => MAIL_PROTOCOL }
+  client = AvroClient.new(["localhost:9091", "localhost:9090", "localhost:9092"], options)
+
+You can then make calls to the server via the <tt>client</tt> instance as if was your Avro requestor. The connection will be opened lazily and methods will be proxied through.
+
+  avro.request("mail", params)
+  or
+  avro.mail(params)
+
+  Please note that the method name (e.g. "mail") cannot be "send".
+
+On failures, the client will try the remaining servers in the list before giving up. See AvroClient for more.
+
+== Installation
+
+You need Ruby 1.8 or 1.9. If you have those, just run:
+
+  sudo gem install avro_client
+
+
