@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'socket'
+require 'pp'
+require "#{File.dirname(__FILE__)}/../lib/avro_client.rb"
+
+protocol = Avro::Protocol.parse(File.open("#{File.expand_path(File.dirname(__FILE__))}/sample_protocol.json", 'r').read)
+servers = ['localhost:11011'] 
+
+avro = AvroClient.new(servers, {:protocol => protocol, :timeout => 5, :raise => true, :retries => 3} )
+
+sample_name = "Foo" 
+sample_count = 5
+TEST_CASES = [ ['Foo', 5], [nil, 2], ['Bar', -3]]
+for sample_name, sample_count in TEST_CASES
+  puts "\navro.make_sample('sample_name' => #{sample_name}, 'sample_count' => #{sample_count})"
+  puts "==========================================="
+  pp avro.make_sample('sample_name' => sample_name, 'sample_count' => sample_count)
+end
+
