@@ -29,9 +29,10 @@ class TestSampleServer < Test::Unit::TestCase
       result = @avro.make_sample('sample_name' => 'Foo', 'sample_count' => 5)
       assert_equal 1, result.first['id']
       server1_requests += 1 if result.first['maker'] == 'server1'
-      server2_requests += 2 if result.first['maker'] == 'server2'
+      server2_requests += 1 if result.first['maker'] == 'server2'
     end
     assert server1_requests > 0
     assert server2_requests > 0
+    assert_equal 10, server1_requests + server2_requests
   end
 end
