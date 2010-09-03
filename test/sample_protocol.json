@@ -5,7 +5,8 @@
     {
       "name": "Sample", "type": "record", "fields": [
         { "name": "name", "type": ["null", "string"] },
-        { "name": "id", "type": ["null", "long"] }
+        { "name": "id", "type": ["null", "long"] },
+        { "name": "maker", "type": "string" }
       ]
     },
     {

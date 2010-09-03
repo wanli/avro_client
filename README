@@ -35,4 +35,44 @@ You need Ruby 1.8 or 1.9. If you have those, just run:
 
   sudo gem install avro_client
 
+== Examples
 
+  1. First start the server:
+    ruby test/sample_server.rb
+
+  2. Run the script from another shell:
+    ruby test/make_sample_script 
+
+  3. Output from the server:
+    $ ruby test/sample_server.rb
+    Requests processed 1
+    Requests processed 2
+    Requests processed 3
+
+  4. Output from the script:
+    $ ruby test/make_sample_script
+
+    avro.make_sample('sample_name' => Foo, 'sample_count' => 5)
+    ===========================================
+    [{"name"=>"Foo", "id"=>1, "maker"=>"Foobar"},
+     {"name"=>"Foo", "id"=>2, "maker"=>"Foobar"},
+     {"name"=>"Foo", "id"=>3, "maker"=>"Foobar"},
+     {"name"=>"Foo", "id"=>4, "maker"=>"Foobar"},
+     {"name"=>"Foo", "id"=>5, "maker"=>"Foobar"}]
+
+    avro.make_sample('sample_name' => , 'sample_count' => 2)
+    ===========================================
+    [{"name"=>"default sample name", "id"=>1, "maker"=>"Foobar"},
+     {"name"=>"default sample name", "id"=>2, "maker"=>"Foobar"}]
+
+    avro.make_sample('sample_name' => Bar, 'sample_count' => -3)
+    ===========================================
+    "#<ArgumentError: Invalid sample count specified>"
+
+== Tests
+
+  ruby test/test_simple.rb
+  -- This test forks a server process and sends avro requests to the server using avro client.
+
+  ruby test/test_multiple_servers.rb
+  -- This test forks two servers and checks if avro requests are sent to both servers.

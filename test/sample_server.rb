@@ -5,8 +5,9 @@ require 'avro'
 AVRO_PROTOCOL = Avro::Protocol.parse(File.open("#{File.expand_path(File.dirname(__FILE__))}/sample_protocol.json", 'r').read)
 
 class SampleResponder < Avro::IPC::Responder
-  def initialize
+  def initialize(name)
     super(AVRO_PROTOCOL)
+    @name = name
   end
 
   def call(message, request)
@@ -21,12 +22,13 @@ class SampleResponder < Avro::IPC::Responder
   def make_sample(request)
     sample_name = request['sample_name'] || 'default sample name'
     raise ArgumentError, "Invalid sample count specified" if request['sample_count'] <= 0
-    (1..request['sample_count']).map { |sample_id| { 'name' => sample_name, 'id' => sample_id } }
+    (1..request['sample_count']).map { |sample_id| { 'name' => sample_name, 'id' => sample_id, 'maker' => @name } }
   end
 end
 
 class SampleHandler
-  def initialize(address, port)
+  def initialize(name, address, port)
+    @name = name
     @ip_address = address
     @port = port
   end
@@ -56,7 +58,7 @@ class SampleHandler
   end
 
   def handle(request)
-    responder = SampleResponder.new()
+    responder = SampleResponder.new(@name)
     transport = Avro::IPC::SocketTransport.new(request)
     str = transport.read_framed_message
     transport.write_framed_message(responder.respond(str))
@@ -65,8 +67,8 @@ end
 
 if __FILE__ == $0
   requests_processed = 0
-  SampleHandler.new('localhost', 11011).run {
+  SampleHandler.new('Foobar', 'localhost', 11011).run {
     requests_processed += 1
-    puts "Request processed #{requests_processed}"
+    puts "Requests processed #{requests_processed}"
   }
 end
